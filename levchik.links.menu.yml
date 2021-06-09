@@ -1,0 +1,6 @@
+levchik.admin:
+  title: Guests Feedback
+  description: Administer your feedback.
+  parent: system.admin_structure
+  route_name: levchik.guests_list
+  weight: 10

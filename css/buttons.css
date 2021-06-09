@@ -1,0 +1,20 @@
+.guest-buttons-drop-out {
+  text-align: center;
+  position: relative;
+}
+.guest-buttons-drop-out .guest-actions {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  white-space: nowrap;
+  background-color: white;
+  border: 1px solid gray;
+  padding: 5px;
+  -webkit-box-shadow: gray 1px 4px 5px;
+  box-shadow: gray 1px 4px 5px;
+}
+.guest-buttons-drop-out .guest-actions .btn-outline-danger {
+  margin-right: 5px;
+}

@@ -1,0 +1,23 @@
+guests-styling:
+  version: VERSION
+  css:
+    component:
+      css/guests.css: {}
+
+guests-form:
+  version: VERSION
+  css:
+    component:
+      css/form.css: {}
+
+buttons:
+  version: VERSION
+  css:
+    component:
+      css/buttons.css: {}
+  js:
+    js/guest-actions.js: { }
+  dependencies:
+    - core/jquery
+    #- core/popperjs
+

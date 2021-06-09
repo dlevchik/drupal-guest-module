@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the levchik module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function levchik_schema() {
+  $schema['levchik'] = [
+    'description' => "Table to store guest book data.",
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => t('Primary Key.'),
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Timestamp when the record was created.'),
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 64,
+        'default' => '',
+        'description' => t('Guest name.'),
+      ],
+      'email' => [
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 128,
+        'default' => '',
+        'description' => t('Guest email.'),
+      ],
+      'phone' => [
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 128,
+        'default' => '',
+        'description' => t('Guest phone.'),
+      ],
+      'picture_fid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Feedback picture.'),
+      ],
+      'avatar_fid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('User avatar picture.'),
+      ],
+      'message' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => t('Feedback message.'),
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'created' => ['created'],
+      'name' => ['name'],
+      'email' => ['email'],
+      'phone' => ['phone'],
+      'message' => ['message'],
+    ],
+    'foreign keys' => [
+      'picture_fid' => [
+        'table' => 'file_managed',
+        'columns' => ['picture_fid' => 'fid'],
+      ],
+      'avatar_fid' => [
+        'table' => 'file_managed',
+        'columns' => ['picture_fid' => 'fid'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}

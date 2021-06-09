@@ -1,0 +1,32 @@
+{% if guests is not empty %}
+  <ul class="guests-container">
+    {% for guest in guests %}
+      <li class="guest-item">
+        <div class="user-data">
+          <div class="avatar-container">
+            <img src="{{ guest.avatar_src }}" alt="User avatar">
+          </div>
+          <span class="name">{{ guest.name }}</span>
+          <time class="posted-time">{{ guest.created|date("m/j/Y H:i:s") }}</time>
+        </div>
+        <div class="feedback clearfix">
+          {% if guest.picture_src %}
+            <div class="picture-container">
+              <img src="{{ guest.picture_src }}" alt="Feedback Picture">
+            </div>
+          {% endif %}
+          {{ guest.message }}
+        </div>
+        <div class="contact-data">
+          <span class="email">{{ guest.email }}</span>
+          <span class="phone">{{ guest.phone }}</span>
+          {% if user.hasPermission('administer levchik guests') %}
+            {{ guest.buttons }}
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <h2>{{ 'No guests here yet. You can be the first!'|t }}</h2>
+{% endif %}

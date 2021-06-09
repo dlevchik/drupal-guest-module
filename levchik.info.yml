@@ -1,0 +1,4 @@
+name: Levchik
+type: module
+description: 'Guest book module.'
+core_version_requirement: 9.x

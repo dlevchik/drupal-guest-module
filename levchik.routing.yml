@@ -1,0 +1,33 @@
+levchik.guestbook:
+  path: '/levchik/guest-book'
+  defaults:
+    _title: 'Guest Book'
+    _controller: '\Drupal\levchik\Controller\LevchikController::build'
+  requirements:
+    _permission: 'access content'
+
+levchik.edit_form:
+  path: '/admin/levchik/guest/{id}/edit'
+  defaults:
+    _form: '\Drupal\levchik\Form\GuestForm'
+    _title: 'Edit guest data.'
+  requirements:
+    _permission: 'administer levchik guests'
+    id: ^\d+$
+
+levchik.delete_form:
+  path: '/admin/levchik/guest/{id}/delete'
+  defaults:
+    _form: '\Drupal\levchik\Form\ConfirmDeleteForm'
+    _title: 'Confirm Guest Deletion'
+  requirements:
+    _permission: 'administer levchik guests'
+    id: ^\d+$
+
+levchik.guests_list:
+  path: '/admin/structure/guests'
+  defaults:
+    _form: '\Drupal\levchik\Form\GuestAdminForm'
+    _title: 'Administer Guests'
+  requirements:
+    _permission: 'administer levchik guests'

@@ -1,0 +1,4 @@
+administer levchik guests:
+  title: 'Administer levchik guests'
+  description: 'Allow user to edit and delete guests.'
+  restrict access: true
