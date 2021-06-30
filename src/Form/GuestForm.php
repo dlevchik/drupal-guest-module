@@ -114,9 +114,7 @@ class GuestForm extends FormBase {
       '#title' => t("Your feedback picture:"),
       '#required' => FALSE,
       '#upload_validators' => [
-        'file_validate_is_image' => [],
-        'file_validate_size' => [5242880],
-        'file_validate_extensions' => ['gif jpg jpeg'],
+        'custom_img_validator' => [5242880],
       ],
       '#upload_location' => 'public://levchik/pictures/',
       '#default_value' => (!is_null($this->guest) && $this->guest['picture_fid'] != 0) ? [$this->guest['picture_fid']] : "",
