@@ -4,3 +4,8 @@ levchik.admin:
   parent: system.admin_structure
   route_name: levchik.guests_list
   weight: 10
+levchik.guests_link:
+  title: Guests
+  menu_name: main
+  route_name: levchik.guestbook
+  weight: 10

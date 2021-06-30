@@ -6,6 +6,8 @@ fieldset.error input,
 }
 
 fieldset.error small,
-.form-item.error .description {
+.form-item.error .description,
+.picture_description.error,
+.avatar_description.error {
   color: red !important;
 }

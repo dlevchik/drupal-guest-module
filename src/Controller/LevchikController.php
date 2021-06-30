@@ -77,7 +77,7 @@ class LevchikController extends ControllerBase {
         $avatar_url = Url::fromUri(file_create_url($avatar_uri))->toString();
       }
       else {
-        $avatar_url = "/modules/custom/levchik/img/download.jpeg";
+        $avatar_url = '/' . drupal_get_path('module', 'levchik') . "/img/download.jpeg";
       }
       $item['avatar_src'] = $avatar_url;
 

@@ -1,13 +1,19 @@
 <?php
+
 /**
-* @file
-* A description of what your module does.
-*/
+ * @file
+ * A description of what your module does.
+ */
+
+use Drupal\file\FileInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\file\Element\ManagedFile;
+use Drupal\Core\Ajax\HtmlCommand;
 
 /**
  * Implements hook_theme().
  */
-function levchik_theme($existing, $type, $theme, $path) {
+function levchik_theme() {
   return [
     'levchik_guests' => [
       'variables' => [
@@ -29,4 +35,104 @@ function levchik_theme($existing, $type, $theme, $path) {
  */
 function levchik_preprocess_levchik_guest_button(&$variables) {
   $variables['#attached']['library'][] = 'levchik/buttons';
+}
+
+/**
+ * Implements hook_file_validate().
+ */
+function custom_img_validator(FileInterface $file, $size) {
+  $errors = [];
+  $errors = array_merge($errors, file_validate_is_image($file));
+  $errors = array_merge($errors, file_validate_size($file, $size));
+  $errors = array_merge($errors, file_validate_extensions($file, 'gif jpg jpeg'));
+
+  if (empty($errors)) {
+    return $errors;
+  }
+
+  $message = [
+    'error' => [
+      '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $file->getFilename()]),
+    ],
+    'item_list' => [
+      '#theme' => 'item_list',
+      '#items' => $errors,
+    ],
+  ];
+
+  $_SESSION['levchik']['errors'] = Drupal::service('renderer')->renderPlain($message);
+
+  return $errors;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function levchik_element_info_alter(array &$info) {
+  $info['managed_file']['#process'][] = 'levchik_managed_file_process';
+}
+
+/**
+ * Custom process callback added to managed_file elements.
+ *
+ * Replaces the original #ajax callback with a custom one.
+ */
+function levchik_managed_file_process(array &$element) {
+  $element['upload_button']['#ajax']['callback'] = 'levchik_managed_file_ajax_callback';
+
+  return $element;
+}
+
+/**
+ * Custom ajax callback for managed files.
+ *
+ * Overrides \Drupal\file\Element\ManagedFile::uploadAjaxCallback()
+ *
+ * @see \Drupal\file\Element\ManagedFile::uploadAjaxCallback
+ */
+function levchik_managed_file_ajax_callback(array &$form, FormState $form_state) {
+  // Retrieve the original response.
+  $response = ManagedFile::uploadAjaxCallback($form, $form_state, Drupal::request());
+
+  // Add our own command to the end, so our command is run last:
+  $errors =& $_SESSION['levchik']['errors'];
+  if (!empty($errors)) {
+    switch ($form_state->getTriggeringElement()['#name']) {
+      case 'avatar_upload_button':
+        $response->addCommand(
+          new HtmlCommand(
+            '.avatar_description',
+            $errors,
+          ),
+        );
+        break;
+
+      case 'picture_upload_button':
+        $response->addCommand(
+          new HtmlCommand(
+            '.picture_description',
+            $errors,
+          ),
+        );
+        break;
+
+    }
+    unset($_SESSION['levchik']['errors']);
+  }
+  else {
+    $response->addCommand(
+      new HtmlCommand(
+        '.avatar_description',
+        "",
+      ),
+    );
+    $response->addCommand(
+      new HtmlCommand(
+        '.picture_description',
+        "",
+      ),
+    );
+  }
+
+  return $response;
 }

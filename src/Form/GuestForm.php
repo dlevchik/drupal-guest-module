@@ -86,7 +86,7 @@ class GuestForm extends FormBase {
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
-      '#required' => TRUE,
+      '#required' => FALSE,
       '#default_value' => !is_null($this->guest) ? $this->guest['message'] : "",
     ];
 
@@ -96,12 +96,16 @@ class GuestForm extends FormBase {
       '#title' => t("Your avatar:"),
       '#required' => FALSE,
       '#upload_validators' => [
-        'file_validate_is_image' => [],
-        'file_validate_size' => [2097152],
-        'file_validate_extensions' => ['gif jpg jpeg'],
+        'custom_img_validator' => [2097152],
       ],
       '#upload_location' => 'public://levchik/avatars/',
       '#default_value' => (!is_null($this->guest) && $this->guest['avatar_fid'] != 0) ? [$this->guest['avatar_fid']] : "",
+    ];
+    $form['avatar_description'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['avatar_description', 'error'],
+      ],
     ];
 
     $form['picture'] = [
@@ -116,6 +120,12 @@ class GuestForm extends FormBase {
       ],
       '#upload_location' => 'public://levchik/pictures/',
       '#default_value' => (!is_null($this->guest) && $this->guest['picture_fid'] != 0) ? [$this->guest['picture_fid']] : "",
+    ];
+    $form['picture_description'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['picture_description', 'error'],
+      ],
     ];
 
     $form['actions'] = [
@@ -178,10 +188,12 @@ class GuestForm extends FormBase {
   }
 
   /**
+   * Display validations messages.
+   *
    * Function for ajax validation message display using
    * ajaxErrorByName function. clearElements is array of fields without
    * errors and necesarry to clear errors messages after user has corrected
-   * his input.
+   * input.
    */
   public function ajaxValidation(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
@@ -210,6 +222,8 @@ class GuestForm extends FormBase {
   }
 
   /**
+   * Display error messages in field.
+   *
    * Function displays message from setErrorByName() in form fields
    * description. Also it add's class 'error' on fields with error.
    * If setErrorByName() has no message in it function just sets
